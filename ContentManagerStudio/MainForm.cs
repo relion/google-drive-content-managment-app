@@ -223,7 +223,7 @@ namespace ContentManagerStudio
             //service = new DiscoveryService(new BaseClientService.Initializer
             //{
             //    ApplicationName = "CMStudio",
-            //    ApiKey = "AIzaSyC19RDvgE0ANV61ilyLSMsEgoVkoiEasvg",
+            //    ApiKey = "...",
             //});
 
             //var x = service.Users.Messages.Get("", messageId).Execute();
