@@ -1,0 +1,5 @@
+username: 
+timeFormat: 0
+#
+excluded_folders_re: 
+#$Bak

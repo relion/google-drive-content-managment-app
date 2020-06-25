@@ -1,0 +1,272 @@
+﻿span.currentTime {
+  color: red;
+  font-weight: bold;
+  font-size: 110%;
+}
+
+div.controls_line {
+  margin-bottom: 6px;
+  position: relative;
+  z-index: 5;
+}
+
+div#videos_avalable_info {
+  color: blue;
+  font-weight: bold;
+  font-size: 150%;
+  margin-top: 12px;
+  margin-bottom: 6px;
+}
+
+span.err_line {
+  color: red;
+  font-weight: bold;
+  font-size: 130%;
+  background-color: greenyellow;
+  padding-left: 6px;
+  padding-right: 6px;
+}
+
+span.err_msg {
+  color: red;
+  font-weight: bold;
+  font-style: italic;
+  font-size: 100%;
+}
+
+div.mark_button {
+  margin: 3px 2px 2px 24px;
+}
+
+div.mark_container {
+  background-color: #fff7b0;
+  border: 1px solid black;
+  width: fit-content;
+  padding: 3px;
+  border-radius: 5px;
+  margin-top: 6px;
+  position: relative;
+  z-index: 5;
+}
+
+span.mark_header {
+  color: red;
+  font-weight: bold;
+  text-decoration: underline;
+  font-size: 120%;
+}
+
+div.recommend_line,
+div.cat_path_line {
+  margin-top: 14px;
+  margin-bottom: 6px;
+  color: blueviolet;
+  font-weight: bold;
+  font-size: 120%;
+}
+
+span.grade_number {
+  color: green;
+  font-size: 16px;
+  font-weight: bold;
+  padding: 1px 3px 2px 6px;
+}
+
+div.recommend_line {
+  margin-bottom: 12px;
+}
+
+input[name="grade"] {
+  margin: 0 0 0 0;
+  cursor: pointer;
+}
+
+ul,
+#myUL {
+  list-style-type: none;
+}
+
+#myUL {
+  margin: 0;
+  padding: 0;
+}
+
+.caret {
+  cursor: pointer;
+  user-select: none;
+}
+
+.caret::before {
+  content: "\25B6";
+  color: black;
+  display: inline-block;
+  margin-right: 6px;
+}
+
+.caret-down::before {
+  transform: rotate(90deg);
+}
+
+.nested {
+  display: none;
+}
+
+.active {
+  display: block;
+}
+
+.addFileBtn:before {
+  content: url(images/blank-file-2.png);
+  position: relative;
+  top: 1px;
+}
+
+.addDirBtn:before {
+  content: url(images/open-folder-outline.png);
+  position: relative;
+  top: 1px;
+}
+
+.deleteBtn:before {
+  content: url(images/delete.png);
+  position: relative;
+  top: 1px;
+}
+
+.editBtn:before {
+  content: url(images/edit-button.png);
+  position: relative;
+  top: 1px;
+}
+
+.generalBtn {
+  width: auto;
+  background-color: lightgreen;
+  text-align: center;
+  cursor: pointer;
+  padding: 1px 3px 0px 2px;
+  border-radius: 5px;
+  margin: 0px 2px 0px 2px;
+  border: 1px solid lightgreen;
+}
+.generalBtn:hover,
+.editTreelBtn:hover {
+  border: 1px solid black;
+}
+
+.editTreelBtn {
+  width: auto;
+  background-color: lightgreen;
+  text-align: center;
+  cursor: pointer;
+  padding: 1px 3px 0px 2px;
+  border-radius: 5px;
+  margin: 0px 2px 0px 2px;
+  border: 1px solid lightgreen;
+  display: inline-block;
+}
+
+li.catFile .fileContentWrapper {
+  background-color: lightblue;
+  margin: 4px;
+  width: fit-content;
+  padding: 1px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 5px;
+  font-family: monospace;
+  font-size: 13px;
+  cursor: pointer;
+}
+
+li.catFolder {
+  margin-bottom: 4px;
+  font-size: 13px;
+}
+
+.caret {
+  background-color: #ffd965;
+  margin: 4px;
+  width: fit-content;
+  padding: 1px;
+  padding-left: 6px;
+  padding-right: 6px;
+  border-radius: 5px;
+  font-family: monospace;
+  cursor: pointer;
+}
+
+li.catFile .fileContentWrapper:hover,
+.caret:hover,
+.pathContainer:hover {
+  opacity: 0.85;
+}
+
+span.addFileBtn,
+span.addDirBtn {
+  display: inline-block;
+  margin-left: 2px;
+}
+
+.pathContainer {
+  cursor: pointer;
+  font-family: monospace;
+  background-color: lightgreen;
+  width: fit-content;
+  padding: 4px;
+  font-weight: bold;
+  margin: 10px;
+  padding-left: 13px;
+  padding-right: 13px;
+  color: navy;
+  border-radius: 6px;
+}
+
+ul.catRootUl,
+.grade_numbers_container {
+  width: fit-content;
+  /* background-color: #fff7b0; */
+  border: 1px solid gray;
+  border-radius: 5px;
+  padding: 1px 5px 3px 0px;
+}
+
+button {
+  background-color: lightblue;
+  border-radius: 5px;
+  font-weight: bold;
+  color: darkslategray;
+  cursor: pointer;
+}
+
+button.mark_button {
+  background-color: orchid;
+}
+
+input.cms_cb {
+  width: fit-content;
+}
+
+.markBtn {
+  width: 290px;
+  text-align: left;
+  cursor: pointer;
+  border-radius: 5px;
+  border: 2px gray solid;
+  margin-left: 5px;
+  padding-left: 4px;
+  padding-right: 4px;
+  background-color: white; /* TODO: Ofek. not working */
+}
+
+.markBtn[readOnly] {
+  background-color: lightskyblue;
+  text-align: center;
+}
+
+.mark_time {
+  color: red;
+  font-size: 14px;
+  margin: 5px;
+  font-weight: bold;
+}

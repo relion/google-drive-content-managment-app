@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test Tree-Menue</title>
+    <link rel="stylesheet" type="text/css" href="cms.css" />
+    <meta http-equiv="X-UA-Compatible" content="IE=11" />
+  </head>
+  <body>
+    <div id="root">
+      <!-- <div class="cat_path_line">
+        <span>Category:</span>
+        <span id="pathContainer" class="pathContainer">Choose Category</span>
+        <div id="tree_menue_div"></div>
+      </div>
+    </div> -->
+    <div id="tree_menue_div"></div>
+    <script type="text/javascript" src="tree_menue.js"></script>
+    <script>
+      // var pathContainer = document.getElementById("pathContainer");
+      // pathContainer.tree_menue_div = document.getElementById("tree_menue_div");
+      // pathContainer.v = { json: { cat_path_str: null } }; //.v.json.cat_path_str = null;
+      // pathContainer.onclick = function() {
+      //   if (cat_root_ul.parentElement == null) {
+      //     this.tree_menue_div.appendChild(cat_root_ul);
+      //   }
+      //   cat_root_ul.pathContainer = this;
+      // };
+
+      // var recommend_div = create_recommend_div();
+      // document.getElementById("root").appendChild(recommend_div);
+
+      if (window.external.MethodToCallFromScript != undefined)
+      {
+        window.external.MethodToCallFromScript(cat_json);
+      }
+      
+    </script>
+  </body>
+</html>
