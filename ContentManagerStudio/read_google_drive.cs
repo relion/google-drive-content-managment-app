@@ -73,7 +73,7 @@ namespace ContentManagerStudio
             form.show_processing_image("processing google tree...");
             MainForm.rescan_tree_from_google();
 
-            MessageBox.Show("google-drive rescaned.");
+            MessageBox.Show("google-drive Rescanned.\r\nPlease Restart the application.");
             MainForm.this_form.run_load_google_drive_info();
         }
 

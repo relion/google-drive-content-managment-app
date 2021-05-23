@@ -1,5 +1,8 @@
-username: 
+username: aryeh.tuchfeld
 timeFormat: 0
-#
-excluded_folders_re: 
-#$Bak
+#start_dir: $Bak - Smartphone/WhatsApp-Media/WhatsApp Video
+#start_dir: $Bak - Smartphone/WhatsApp-Media
+#start_dir: Smartphone - mp3
+excluded_folders_re: $del_later|MM/facebook|$Bak|$upload_dir|*/_gsdata_*
+#$Bak - Smartphone/Recording/Auto Call Recorder
+#,$Bak

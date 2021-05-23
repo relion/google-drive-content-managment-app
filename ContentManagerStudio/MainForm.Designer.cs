@@ -63,6 +63,7 @@
             this.axWindowsMediaPlayer1 = new AxWMPLib.AxWindowsMediaPlayer();
             this.searchTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer6 = new System.Windows.Forms.SplitContainer();
+            this.SearchGIdCheckBox = new System.Windows.Forms.CheckBox();
             this.searchResultsTextBox = new System.Windows.Forms.TextBox();
             this.categoriesByAndOrCheckBox = new System.Windows.Forms.CheckBox();
             this.olnySharedCheckBox = new System.Windows.Forms.CheckBox();
@@ -78,7 +79,6 @@
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.analysisTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
-            this.fileTypeLabel = new System.Windows.Forms.Label();
             this.sizeLabel = new System.Windows.Forms.Label();
             this.dupsFolderComboBox = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -93,7 +93,7 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.processing_purpose_TextBox = new System.Windows.Forms.TextBox();
             this.processingPictureBox = new System.Windows.Forms.PictureBox();
-            this.SearchGIdCheckBox = new System.Windows.Forms.CheckBox();
+            this.label2 = new System.Windows.Forms.Label();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -409,12 +409,12 @@
             // showDupsButton
             // 
             this.showDupsButton.Enabled = false;
-            this.showDupsButton.Location = new System.Drawing.Point(323, 6);
+            this.showDupsButton.Location = new System.Drawing.Point(355, 6);
             this.showDupsButton.Margin = new System.Windows.Forms.Padding(4);
             this.showDupsButton.Name = "showDupsButton";
-            this.showDupsButton.Size = new System.Drawing.Size(75, 28);
+            this.showDupsButton.Size = new System.Drawing.Size(43, 28);
             this.showDupsButton.TabIndex = 13;
-            this.showDupsButton.Text = "show Dups";
+            this.showDupsButton.Text = "Dups";
             this.showDupsButton.UseVisualStyleBackColor = true;
             this.showDupsButton.Click += new System.EventHandler(this.showDupsButton_Click);
             // 
@@ -491,19 +491,21 @@
             this.play_after_share_CheckBox.AutoSize = true;
             this.play_after_share_CheckBox.Checked = true;
             this.play_after_share_CheckBox.CheckState = System.Windows.Forms.CheckState.Checked;
-            this.play_after_share_CheckBox.Location = new System.Drawing.Point(13, 12);
+            this.play_after_share_CheckBox.Location = new System.Drawing.Point(63, 13);
             this.play_after_share_CheckBox.Margin = new System.Windows.Forms.Padding(4);
             this.play_after_share_CheckBox.Name = "play_after_share_CheckBox";
-            this.play_after_share_CheckBox.Size = new System.Drawing.Size(15, 14);
+            this.play_after_share_CheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.play_after_share_CheckBox.Size = new System.Drawing.Size(66, 17);
             this.play_after_share_CheckBox.TabIndex = 6;
+            this.play_after_share_CheckBox.Text = "and play";
             this.play_after_share_CheckBox.UseVisualStyleBackColor = true;
             // 
             // getLinkButton
             // 
-            this.getLinkButton.Location = new System.Drawing.Point(241, 6);
+            this.getLinkButton.Location = new System.Drawing.Point(295, 6);
             this.getLinkButton.Margin = new System.Windows.Forms.Padding(4);
             this.getLinkButton.Name = "getLinkButton";
-            this.getLinkButton.Size = new System.Drawing.Size(75, 28);
+            this.getLinkButton.Size = new System.Drawing.Size(55, 28);
             this.getLinkButton.TabIndex = 5;
             this.getLinkButton.Text = "get Link";
             this.getLinkButton.UseVisualStyleBackColor = true;
@@ -511,10 +513,10 @@
             // 
             // unShareButton
             // 
-            this.unShareButton.Location = new System.Drawing.Point(156, 6);
+            this.unShareButton.Location = new System.Drawing.Point(231, 6);
             this.unShareButton.Margin = new System.Windows.Forms.Padding(4);
             this.unShareButton.Name = "unShareButton";
-            this.unShareButton.Size = new System.Drawing.Size(77, 28);
+            this.unShareButton.Size = new System.Drawing.Size(59, 28);
             this.unShareButton.TabIndex = 4;
             this.unShareButton.Text = "UnShare";
             this.unShareButton.UseVisualStyleBackColor = true;
@@ -538,12 +540,12 @@
             // 
             this.sahreAndPalyButton.BackColor = System.Drawing.Color.Violet;
             this.sahreAndPalyButton.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(177)));
-            this.sahreAndPalyButton.Location = new System.Drawing.Point(39, 6);
+            this.sahreAndPalyButton.Location = new System.Drawing.Point(13, 6);
             this.sahreAndPalyButton.Margin = new System.Windows.Forms.Padding(4);
             this.sahreAndPalyButton.Name = "sahreAndPalyButton";
-            this.sahreAndPalyButton.Size = new System.Drawing.Size(109, 28);
+            this.sahreAndPalyButton.Size = new System.Drawing.Size(50, 28);
             this.sahreAndPalyButton.TabIndex = 1;
-            this.sahreAndPalyButton.Text = "Share and Play";
+            this.sahreAndPalyButton.Text = "Share";
             this.sahreAndPalyButton.UseVisualStyleBackColor = false;
             this.sahreAndPalyButton.Click += new System.EventHandler(this.shareButton_Click);
             // 
@@ -602,6 +604,17 @@
             this.splitContainer6.SplitterDistance = 114;
             this.splitContainer6.SplitterWidth = 5;
             this.splitContainer6.TabIndex = 0;
+            // 
+            // SearchGIdCheckBox
+            // 
+            this.SearchGIdCheckBox.AutoSize = true;
+            this.SearchGIdCheckBox.Location = new System.Drawing.Point(619, 10);
+            this.SearchGIdCheckBox.Name = "SearchGIdCheckBox";
+            this.SearchGIdCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
+            this.SearchGIdCheckBox.Size = new System.Drawing.Size(43, 17);
+            this.SearchGIdCheckBox.TabIndex = 27;
+            this.SearchGIdCheckBox.Text = "GId";
+            this.SearchGIdCheckBox.UseVisualStyleBackColor = true;
             // 
             // searchResultsTextBox
             // 
@@ -759,7 +772,7 @@
             // 
             // splitContainer7.Panel1
             // 
-            this.splitContainer7.Panel1.Controls.Add(this.fileTypeLabel);
+            this.splitContainer7.Panel1.Controls.Add(this.label2);
             this.splitContainer7.Panel1.Controls.Add(this.sizeLabel);
             this.splitContainer7.Panel1.Controls.Add(this.dupsFolderComboBox);
             this.splitContainer7.Panel1.Controls.Add(this.button1);
@@ -773,19 +786,10 @@
             this.splitContainer7.SplitterDistance = 113;
             this.splitContainer7.TabIndex = 0;
             // 
-            // fileTypeLabel
-            // 
-            this.fileTypeLabel.AutoSize = true;
-            this.fileTypeLabel.Location = new System.Drawing.Point(115, 18);
-            this.fileTypeLabel.Name = "fileTypeLabel";
-            this.fileTypeLabel.Size = new System.Drawing.Size(50, 13);
-            this.fileTypeLabel.TabIndex = 20;
-            this.fileTypeLabel.Text = "file Type:";
-            // 
             // sizeLabel
             // 
             this.sizeLabel.AutoSize = true;
-            this.sizeLabel.Location = new System.Drawing.Point(279, 18);
+            this.sizeLabel.Location = new System.Drawing.Point(241, 13);
             this.sizeLabel.Name = "sizeLabel";
             this.sizeLabel.Size = new System.Drawing.Size(52, 13);
             this.sizeLabel.TabIndex = 12;
@@ -798,7 +802,7 @@
             this.dupsFolderComboBox.Items.AddRange(new object[] {
             "Root",
             "Selected Node"});
-            this.dupsFolderComboBox.Location = new System.Drawing.Point(172, 14);
+            this.dupsFolderComboBox.Location = new System.Drawing.Point(124, 7);
             this.dupsFolderComboBox.Name = "dupsFolderComboBox";
             this.dupsFolderComboBox.Size = new System.Drawing.Size(101, 21);
             this.dupsFolderComboBox.TabIndex = 10;
@@ -817,18 +821,18 @@
             // 
             // dupButton
             // 
-            this.dupButton.Location = new System.Drawing.Point(11, 9);
+            this.dupButton.Location = new System.Drawing.Point(11, 31);
             this.dupButton.Margin = new System.Windows.Forms.Padding(4);
             this.dupButton.Name = "dupButton";
-            this.dupButton.Size = new System.Drawing.Size(97, 28);
+            this.dupButton.Size = new System.Drawing.Size(37, 28);
             this.dupButton.TabIndex = 9;
-            this.dupButton.Text = "find Duplication";
+            this.dupButton.Text = "Go";
             this.dupButton.UseVisualStyleBackColor = true;
             this.dupButton.Click += new System.EventHandler(this.dupButton_Click);
             // 
             // minTextBox
             // 
-            this.minTextBox.Location = new System.Drawing.Point(337, 15);
+            this.minTextBox.Location = new System.Drawing.Point(299, 10);
             this.minTextBox.Name = "minTextBox";
             this.minTextBox.Size = new System.Drawing.Size(61, 20);
             this.minTextBox.TabIndex = 11;
@@ -953,16 +957,14 @@
             this.processingPictureBox.TabStop = false;
             this.processingPictureBox.Visible = false;
             // 
-            // SearchGIdCheckBox
+            // label2
             // 
-            this.SearchGIdCheckBox.AutoSize = true;
-            this.SearchGIdCheckBox.Location = new System.Drawing.Point(619, 10);
-            this.SearchGIdCheckBox.Name = "SearchGIdCheckBox";
-            this.SearchGIdCheckBox.RightToLeft = System.Windows.Forms.RightToLeft.Yes;
-            this.SearchGIdCheckBox.Size = new System.Drawing.Size(43, 17);
-            this.SearchGIdCheckBox.TabIndex = 27;
-            this.SearchGIdCheckBox.Text = "GId";
-            this.SearchGIdCheckBox.UseVisualStyleBackColor = true;
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Find Duplicates under:";
             // 
             // MainForm
             // 
@@ -1070,7 +1072,6 @@
         private System.Windows.Forms.ComboBox filesExtComboBox;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button searchButton;
-        private System.Windows.Forms.Label fileTypeLabel;
         private System.Windows.Forms.CheckBox filesCheckBox;
         private System.Windows.Forms.CheckBox foldersCheckBox;
         private System.Windows.Forms.Label titleLabel;
@@ -1096,6 +1097,7 @@
         private System.Windows.Forms.Button sendCatButton;
         private System.Windows.Forms.Button sendUserCatButton;
         private System.Windows.Forms.CheckBox SearchGIdCheckBox;
+        private System.Windows.Forms.Label label2;
     }
 }
 

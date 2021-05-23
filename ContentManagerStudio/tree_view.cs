@@ -89,7 +89,7 @@ namespace ContentManagerStudio
                 {
                     string[] dup_files;
                     bool already_shared_by_other_copy;
-                    if (get_dup_files(fi3, out dup_files, out already_shared_by_other_copy))
+                    if (get_dup_files(null, fi3, out dup_files, out already_shared_by_other_copy))
                     {
                         // tnf.BackColor = Color.Violet;
                         if (already_shared_by_other_copy)
@@ -225,7 +225,7 @@ namespace ContentManagerStudio
                 //nodeInfoTextBox.AppendText($"Version: {f.Version}\r\n");
                 string[] dup_files;
                 bool already_shared_by_other_copy;
-                if (get_dup_files(f, out dup_files, out already_shared_by_other_copy))
+                if (get_dup_files(null, f, out dup_files, out already_shared_by_other_copy))
                 {
                     nodeInfoTextBox.AppendText($"Duplicated: {dup_files.Length - 1} more time" + (dup_files.Length == 1 ? "" : "s") + "." + (already_shared_by_other_copy /* && f.Shared == true */ ? " Already Shared!" : "") + "\r\n");
                     showDupsButton.Enabled = true;
@@ -287,10 +287,31 @@ namespace ContentManagerStudio
             DateTime res;
             if (f.CreatedTime != null)
             {
-                res = (DateTime)f.CreatedTime;
-                if (false && !DateTime.TryParseExact(f.CreatedTime.ToString(), "MM/dd/yyyy H:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out res))
+
+                //if (res.Ticks == 637429619080000000)
+                if (f.Name == "VID-20200712-WA0027.mp4")
                 {
-                    MessageBox.Show("failed to Parse: " + f.CreatedTime.ToString());
+
+                }
+
+                //res = new DateTime(f.CreatedTime.Value.Ticks);
+                //return res;
+
+                res = (DateTime)f.CreatedTime;
+
+              //if (true && !DateTime.TryParseExact(f.CreatedTimeRaw, "MM/dd/yyyy H:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out res))
+                if (true && !DateTime.TryParseExact(f.CreatedTimeRaw, "MM/dd/yyyy H:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out res))
+                {
+                    if (true && DateTime.TryParseExact(f.CreatedTime.ToString(), "dd/MM/yy h:mm:ss tt", CultureInfo.InvariantCulture, DateTimeStyles.None, out res))
+                    {
+                    }
+                    else if (true && DateTime.TryParseExact(f.CreatedTime.ToString(), "dd/MM/yyyy H:mm:ss", CultureInfo.InvariantCulture, DateTimeStyles.None, out res))
+                    {
+                    }
+                    else
+                    {
+                        MessageBox.Show("failed to Parse: " + f.CreatedTime.ToString());
+                    }
                 }
                 else
                 {
@@ -311,10 +332,11 @@ namespace ContentManagerStudio
             return res;
         }
 
-        private static bool get_dup_files(Google.Apis.Drive.v3.Data.File f, out string[] dup_files, out bool already_shared_by_other_copy)
+        private static bool get_dup_files(GoogleFolder root_folder, Google.Apis.Drive.v3.Data.File f, out string[] dup_files, out bool already_shared_by_other_copy)
         {
             List<object> fl = (List<object>)((Hashtable)global_ri.by_ht_name_ht["file_by_Md5_ht"])[f.Md5Checksum];
             already_shared_by_other_copy = false;
+            // check if shared:
             foreach (GoogleFolder gf in fl)
             {
                 if (gf.file.Id != f.Id && gf.file.Shared == true)
@@ -322,7 +344,14 @@ namespace ContentManagerStudio
                     already_shared_by_other_copy = true;
                 }
             }
-            dup_files = fl.Select(x => ((GoogleFolder)x).file.Id).ToArray();
+            // dup_files = fl.Select(x => ((GoogleFolder)x).file.Id).ToArray();
+            List<string> _dup_files = new List<string>();
+            foreach(GoogleFolder gf in fl)
+            {
+                // check if f is under gf
+                _dup_files.Add(gf.file.Id);
+            }
+            dup_files = _dup_files.ToArray();
             if (dup_files.Length == 0) throw new Exception();
             return dup_files.Length > 1;
         }

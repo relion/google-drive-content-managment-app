@@ -314,10 +314,23 @@ namespace ContentManagerStudio
                 while (true)
                 {
                     object ret = null;
-                    f.Invoke(new MethodInvoker(delegate
+
+                    int i;
+                    for (i = 0; i < 5; i++)
                     {
-                        ret = wb.Document.InvokeScript("create_tree_menue", args);
-                    }));
+                        try
+                        {
+                            f.Invoke(new MethodInvoker(delegate
+                            {
+                                ret = wb.Document.InvokeScript("create_tree_menue", args);
+                            }));
+                            break;
+                        }
+                        catch (Exception ex) { }
+                        System.Threading.Thread.Sleep(400);
+                    }
+                    if (i == 5) throw new Exception("failed to InvokeScript: create_tree_menue");
+
                     if ((bool?)ret == true) break;
                     System.Threading.Thread.Sleep(1000);
                 }
@@ -601,7 +614,7 @@ namespace ContentManagerStudio
             {
 
                 show_processing_image();
-                if ((bool)axWindowsMediaPlayer1.Tag)
+                if (true && (bool)axWindowsMediaPlayer1.Tag)
                 {
                     //System.Threading.Thread.Sleep(2000);
                     axWindowsMediaPlayer1.Ctlcontrols.pause();
@@ -875,6 +888,15 @@ namespace ContentManagerStudio
                 //googleDriveTreeView.SelectedNode.BackColor = SystemColors.Highlight;
                 //googleDriveTreeView.SelectedNode.ForeColor = Color.White;
             }
+            googleDriveTreeView.SelectedNode = e.Node;
+            //if (click_to_play_CheckBox.Checked)
+            //{
+            //    if (false && ((List<object>)googleDriveTreeView.SelectedNode.Tag)[1] is Google.Apis.Drive.v3.Data.File)
+            //    {
+            //        //sahreAndPalyButton.Click()...; // todo
+            //        shareButton_Click(sender, e);
+            //    }
+            //}
         }
 
         private void getLinkButton_Click(object sender, EventArgs e)
@@ -919,19 +941,21 @@ namespace ContentManagerStudio
                     MessageBox.Show("Please select a Root Type.");
                     return;
             }
+
             int min_size_bytes = int.Parse(minTextBox.Text);
-            System.Threading.Thread thread = new System.Threading.Thread(new ThreadStart(new dup_thread(this, fi, min_size_bytes).run));
+
+            System.Threading.Thread thread = new System.Threading.Thread(new ThreadStart(new dup_thread_under_folder(this, fi, min_size_bytes).run));
             thread.IsBackground = true;
             thread.Start();
         }
 
-        protected class dup_thread
+        protected class dup_thread_under_folder
         {
             MainForm form;
             FolderInfo fi;
             int min_size_bytes;
 
-            public dup_thread(MainForm _form, FolderInfo _fi, int _min_size_bytes = 1)
+            public dup_thread_under_folder(MainForm _form, FolderInfo _fi, int _min_size_bytes = 1)
             {
                 form = _form;
                 fi = _fi;
@@ -969,27 +993,25 @@ namespace ContentManagerStudio
             Hashtable _ht = new Hashtable();
             foreach (Google.Apis.Drive.v3.Data.File f in fi.files)
             {
+                if (_ht.Contains(f.Id))
+                {
+                    continue; // already handled.
+                }
+
                 string[] dup_files;
                 bool already_shared_by_other_copy;
-                if (get_dup_files(f, out dup_files, out already_shared_by_other_copy))
+                //
+                GoogleFolder gf = get_GoogleFolder_from_Googlefile(f);
+                //
+                if (get_dup_files(gf, f, out dup_files, out already_shared_by_other_copy))
                 {
-                    List<object> _fi = (List<object>)((Hashtable)(global_ri.by_ht_name_ht["file_by_Id_ht"]))[f.Id];
-                    if (_fi.Count > 1)
-                    {
-                        throw new Exception();
-                    }
-                    if (_ht.Contains(f.Id))
-                    {
-                        continue; // already handled.
-                    }
-                    var gf = (GoogleFolder)_fi[0];
                     if (gf.file.Size < min_size_bytes)
                     {
                         continue;
                     }
                     Invoke(new MethodInvoker(delegate
                     {
-                        analysisResultsTextBox.AppendText(my_utils.decode_heb(gf.path) + "\t" + gf.file.Shared + "\t" + gf.file.Size + "\t" + my_utils.bytes_to_formatted_string((long)f.Size)); //  + "\t" + already_shared_by_other_copy
+                        analysisResultsTextBox.AppendText(my_utils.decode_heb(gf.path) + "\t" + ((bool)gf.file.Shared ? "" : "Not ") + "Shared" + "\t" + "" + "\t" + gf.file.Size + "\t" + my_utils.bytes_to_formatted_string((long)f.Size)); //  + "\t" + already_shared_by_other_copy
                     }));
                     total_dup_size += (long)gf.file.Size;
                     n_dups++;
@@ -1001,18 +1023,22 @@ namespace ContentManagerStudio
                             throw new Exception();
                         }
                         GoogleFolder gf2 = (GoogleFolder)_fi2[0];
-                        if (gf.path == gf2.path)
+
+                        if (gf.file.Id == gf2.file.Id)
                         {
                             continue; // throw new Exception();
                         }
+
                         if (_ht.Contains(gf2.file.Id))
                         {
                             continue; // already handled.
                         }
 
+                        bool is_same_file = gf.path == gf2.path;
+
                         Invoke(new MethodInvoker(delegate
                         {
-                            analysisResultsTextBox.AppendText("\t" + my_utils.decode_heb(gf2.path) + "\t" + gf2.file.Shared);
+                            analysisResultsTextBox.AppendText("\t" + (is_same_file ? $"same file {gf2.file.Id}" : my_utils.decode_heb(gf2.path)) + "\t" + ((bool)gf2.file.Shared ? "" : "Not ") + "Shared");
                         }));
                         _ht.Add(gf2.file.Id, null);
                     }
@@ -1026,6 +1052,16 @@ namespace ContentManagerStudio
             {
                 scan_folder_files_for_dups(f, min_size_bytes, ref n_dups, ref total_dup_size);
             }
+        }
+
+        private static GoogleFolder get_GoogleFolder_from_Googlefile(Google.Apis.Drive.v3.Data.File f)
+        {
+            List<object> _fi = (List<object>)((Hashtable)(global_ri.by_ht_name_ht["file_by_Id_ht"]))[f.Id];
+            if (_fi.Count > 1)
+            {
+                throw new Exception();
+            }
+            return (GoogleFolder)_fi[0];
         }
 
         private void button_do_analyse_different_video_files(object sender, EventArgs e)
@@ -1842,6 +1878,7 @@ namespace ContentManagerStudio
         private void googleDriveTreeView_NodeMouseClick(object sender, TreeNodeMouseClickEventArgs e)
         {
             googleDriveTreeView.SelectedNode = ((TreeView)sender).GetNodeAt(new Point(e.X, e.Y));
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
             if (e.Button == MouseButtons.Right)
             {
                 object o = ((List<object>)googleDriveTreeView.SelectedNode.Tag)[1];
