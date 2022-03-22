@@ -35,6 +35,8 @@ using System.Net;
 using System.Text.RegularExpressions;
 using System.Linq;
 using System.Drawing;
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace ContentManagerStudio
 {
@@ -66,68 +68,15 @@ namespace ContentManagerStudio
                 properties_ht[key] = val;
             }
 
-            string aaa = (string)properties_ht["excluded_folders_re"];
-            if (string.IsNullOrEmpty(aaa))
+            string ex_re = (string)properties_ht["excluded_folders_re"];
+            if (string.IsNullOrEmpty(ex_re))
             {
                 excluded_folders_re = null;
             }
             else
             {
-                excluded_folders_re = aaa.Replace("*", @".*").Replace("/", @"\/").Replace("$", @"\$"); // .Split(',').Select(f => f.Trim()).ToArray();
+                excluded_folders_re = ex_re.Replace("*", @".*").Replace("/", @"\/").Replace("$", @"\$"); // .Split(',').Select(f => f.Trim()).ToArray();
             }
-
-            categoriesWebBrowser.ObjectForScripting = this;
-            string cur_dir = Directory.GetCurrentDirectory();
-            categoriesWebBrowser.Url = new Uri($"file://{cur_dir}/browser/test_tree_menue.htm");
-
-            filterCategoriesWebBrowser.ObjectForScripting = this;
-            filterCategoriesWebBrowser.Url = new Uri($"file://{cur_dir}/browser/test_tree_menue.htm");
-
-            //string[] fb_feeling_activity_json_lines = System.IO.File.ReadAllLines("fb_feeling_activity.json");
-            //foreach (var line in fb_feeling_activity_json_lines)
-            //{
-            //    if (line.Contains("\"text\":"))
-            //    {
-            //        outputTextBox.AppendText(line + "\r\n"); // Regex.Match(line, ":\s+\"").Groups[0].Value
-            //    }
-            //}
-
-            if (false)
-            {
-                global_user_cat_json = new JObject();
-            }
-            else if (true)
-            {
-                JArray categories_json = (JArray)((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename)));
-                global_user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("user_categories.json"));
-                //
-                handle_cats(categories_json);
-            }
-            else
-            {
-
-            }
-
-            if (false)
-            {
-                check_user_cat(((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename))));
-            }
-
-            MenuItem showDuplicatesMenuItem = new MenuItem("Show Duplicates");
-            contextMenu.MenuItems.Add(showDuplicatesMenuItem);
-            showDuplicatesMenuItem.Click += new EventHandler(menuItem_Click);
-            //
-            MenuItem excludeFolderMenuItem = new MenuItem("Exclude Folder");
-            contextMenu.MenuItems.Add(excludeFolderMenuItem);
-            excludeFolderMenuItem.Click += new EventHandler(menuItem_Click);
-            //
-            MenuItem deleteMenuItem = new MenuItem("Delete");
-            contextMenu.MenuItems.Add(deleteMenuItem);
-            deleteMenuItem.Click += new EventHandler(menuItem_Click);
-            //
-            MenuItem rescanMenuItem = new MenuItem("Rescan");
-            contextMenu.MenuItems.Add(rescanMenuItem);
-            rescanMenuItem.Click += new EventHandler(menuItem_Click);
         }
 
         private void check_user_cat(JArray cat_ar)
@@ -282,19 +231,115 @@ namespace ContentManagerStudio
             //Person profile = peopleRequest.Execute();
 
             //return;
+
+
+            if (false)
+            {
+                global_user_cat_json = new JObject();
+            }
+            else if (true)
+            {
+                //JArray categories_json = (JArray)((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename)));
+                ////global_user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("categories/user_categories.json"));
+                ////////
+                //handle_cats(categories_json, "cat");
+                run_load_google_drive_info();
+            }
+            else
+            {
+
+            }
+
+            if (false)
+            {
+                check_user_cat(((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename))));
+            }
+
+            MenuItem showDuplicatesMenuItem = new MenuItem("Show Duplicates");
+            contextMenu.MenuItems.Add(showDuplicatesMenuItem);
+            showDuplicatesMenuItem.Click += new EventHandler(menuItem_Click);
+            //
+            MenuItem excludeFolderMenuItem = new MenuItem("Exclude Folder");
+            contextMenu.MenuItems.Add(excludeFolderMenuItem);
+            excludeFolderMenuItem.Click += new EventHandler(menuItem_Click);
+            //
+            MenuItem deleteMenuItem = new MenuItem("Delete");
+            contextMenu.MenuItems.Add(deleteMenuItem);
+            deleteMenuItem.Click += new EventHandler(menuItem_Click);
+            //
+            MenuItem rescanMenuItem = new MenuItem("Rescan");
+            contextMenu.MenuItems.Add(rescanMenuItem);
+            rescanMenuItem.Click += new EventHandler(menuItem_Click);
+
+            var debugLocation = categories_ChromiumWebBrowser.Location;
+
+            if (!Cef.IsInitialized)
+            {
+                CefSettings settings = new CefSettings();
+                settings.CefCommandLineArgs.Add("disable-gpu", "1");
+                Cef.Initialize(settings);
+            }
+
+
+            categories_ChromiumWebBrowser.LoadingStateChanged += (sender2, args) =>
+            {
+                //Wait for the Page to finish loading
+                if (args.IsLoading == false)
+                {
+                    categories_ChromiumWebBrowser.SetZoomLevel(float.Parse((string)properties_ht["cat_ZoomLevel"]));
+
+                    JArray categories_json = (JArray)((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename)));
+                    global_user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("categories/user_categories.json"));
+                    //
+                    handle_cats(categories_json, "cat");
+                }
+            };
+            //categoriesWebBrowser.ObjectForScripting = this;
+            string test_tree_menue_path = $"file://{Directory.GetCurrentDirectory()}/browser/test_tree_menue.htm";
+            categories_ChromiumWebBrowser.Load(test_tree_menue_path);
+
+            //filterCategoriesWebBrowser.ObjectForScripting = this;
+            //filterCategoriesWebBrowser.Navigate($"file://{cur_dir}/browser/test_tree_menue.htm");
+
+            filter_ChromiumWebBrowser.LoadingStateChanged += (sender2, args) =>
+            {
+                //Wait for the Page to finish loading
+
+                if (args.IsLoading == false)
+                {
+                    filter_ChromiumWebBrowser.SetZoomLevel(float.Parse((string)properties_ht["filter_ZoomLevel"]));
+
+                    JArray categories_json = (JArray)((JArray)JsonConvert.DeserializeObject(System.IO.File.ReadAllText(categories_filename)));
+                    ////global_user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("categories/user_categories.json"));
+                    ////
+                    handle_cats(categories_json, "filter");
+                    ////chromiumWebBrowser1.EvaluateScriptAsync("alert('page loaded');");
+                }
+            };
+            filter_ChromiumWebBrowser.Load(test_tree_menue_path);
+
+            //string[] fb_feeling_activity_json_lines = System.IO.File.ReadAllLines("fb_feeling_activity.json");
+            //foreach (var line in fb_feeling_activity_json_lines)
+            //{
+            //    if (line.Contains("\"text\":"))
+            //    {
+            //        outputTextBox.AppendText(line + "\r\n"); // Regex.Match(line, ":\s+\"").Groups[0].Value
+            //    }
+            //}
+
         }
 
-        const string categories_filename = @"categories.json";
+        const string categories_filename = @"categories/categories.json";
 
         class load_cat_tree_class
         {
-            WebBrowser wb;
-            Form f;
+            object wb;
+            MainForm f;
             bool enable_edit, enable_files_checkbox, enable_folders_checkbox, use_trippleCheckbox, add_clear_buttton;
             string backgroundColor;
             JArray jo;
 
-            public load_cat_tree_class(WebBrowser _wb, Form _f, bool _enable_edit, bool _enable_files_checkbox, bool _enable_folders_checkbox, bool _use_trippleCheckbox, bool _add_clear_buttton, string _backgroundColor, JArray _jo)
+            public load_cat_tree_class(object _wb, MainForm _f, bool _enable_edit, bool _enable_files_checkbox, bool _enable_folders_checkbox, bool _use_trippleCheckbox, bool _add_clear_buttton, string _backgroundColor, JArray _jo)
             {
                 wb = _wb;
                 f = _f;
@@ -305,6 +350,48 @@ namespace ContentManagerStudio
                 add_clear_buttton = _add_clear_buttton;
                 backgroundColor = _backgroundColor;
                 jo = _jo;
+            }
+
+            public void chromium_cat_has_checked(string path, int _checked)
+            {
+                f.cat_has_checked(path, _checked);
+            }
+
+            public void chromium_cat_ctrl_plus_minus(double f)
+            {
+                ((ChromiumWebBrowser)wb).SetZoomLevel(((ChromiumWebBrowser)wb).GetZoomLevelAsync().Result + f);
+            }
+
+            //private void CefBrowser_KeyPress(object sender, KeyPressEventArgs e)
+            //{
+
+            //}
+            private async System.Threading.Tasks.Task run_ChromiumWebBrowser_create_tree_menue(ChromiumWebBrowser wb, object[] args)
+            {
+                wb.JavascriptObjectRepository.Register("callbackObj", this, isAsync: true, options: BindingOptions.DefaultBinder);
+                //
+                wb.JavascriptObjectRepository.ObjectBoundInJavascript += (sender, e) =>
+                {
+                    var name = e.ObjectName;
+                    int retry_count = 5;
+                    while (!wb.CanExecuteJavascriptInMainFrame && retry_count-- > 0)
+                    {
+                        System.Threading.Thread.Sleep(1000);
+                    }
+                    if (retry_count == 0)
+                    {
+                        throw new Exception("Can't Execute Javascript In MainFrame");
+                    }
+                    System.Threading.Tasks.Task res_task =  load_cat_tree_class.run_ChromiumWebBrowser_create_tree_menue2(wb, args);
+                    res_task.Wait(); // lilo
+                };
+                JavascriptResponse res = await wb.EvaluateScriptAsync(@"(async function() {await CefSharp.BindObjectAsync();})();"); // \"callbackObj\"
+            }
+
+            private static async System.Threading.Tasks.Task run_ChromiumWebBrowser_create_tree_menue2(ChromiumWebBrowser wb, object[] args)
+            {
+                JavascriptResponse res = await wb.EvaluateScriptAsync("create_tree_menue", args);
+                if (!res.Success || !(bool)res.Result) throw new Exception("failed to run javascript in browser.");
             }
 
             public void load_cat_tree()
@@ -320,10 +407,21 @@ namespace ContentManagerStudio
                     {
                         try
                         {
-                            f.Invoke(new MethodInvoker(delegate
-                            {
-                                ret = wb.Document.InvokeScript("create_tree_menue", args);
-                            }));
+                            bool res;
+                            //f.Invoke(new MethodInvoker(delegate
+                            //{
+                                if (wb.GetType() == typeof(ChromiumWebBrowser))
+                                {
+                                    System.Threading.Tasks.Task re7 = this.run_ChromiumWebBrowser_create_tree_menue((ChromiumWebBrowser)wb, args);
+                                    //ret = wb.GetMainFrame().EvaluateScriptAsync("create_tree_menue").Result.Message;(, args);
+                                    //if (re7.)
+                                    ret = true;
+                                }
+                                else
+                                {
+                                    ret = ((WebBrowser)wb).Document.InvokeScript("create_tree_menue", args);
+                                }
+                            //}));
                             break;
                         }
                         catch (Exception ex) { }
@@ -408,6 +506,11 @@ namespace ContentManagerStudio
 
             show_processing_image();
 
+            Invoke(new MethodInvoker(delegate
+            {
+                treeViewTabControl.Controls[treeViewTabControl.SelectedIndex].Controls[0].Controls[0].Focus();
+            }));
+
             return;
 
             /* */
@@ -481,6 +584,7 @@ namespace ContentManagerStudio
             foreach (Google.Apis.Drive.v3.Data.File file in folder_info.files)
             {
                 GoogleFolder google_file_folder = new GoogleFolder(file, path + file.Name);
+                if (file.Md5Checksum == null) continue;
                 my_utils.add_obj_to_ht(((Hashtable)global_ri.by_ht_name_ht["file_by_Md5_ht"]), file.Md5Checksum, google_file_folder);
                 my_utils.add_obj_to_ht(((Hashtable)global_ri.by_ht_name_ht["file_by_Id_ht"]), file.Id, google_file_folder);
                 my_utils.add_obj_to_ht((Hashtable)global_ri.by_ht_name_ht["file_by_Name_ht"], file.Name, google_file_folder);
@@ -1116,7 +1220,7 @@ namespace ContentManagerStudio
             System.IO.File.WriteAllText(categories_filename, json.ToString());
         }
 
-        //const string user_categories_filename = @"user_categories.json";
+        //const string user_categories_filename = @"categories/user_categories.json";
         Hashtable filterCategories_ht = new Hashtable();
         Hashtable filterOutCategories_ht = new Hashtable();
 
@@ -1127,7 +1231,9 @@ namespace ContentManagerStudio
 
         public void cat_has_checked(string path, int _checked)
         {
-            if (categoriesWebBrowser.Focused) // googleDriveTreeView.Focused || 
+            Invoke(new MethodInvoker(delegate
+            {
+            if (categories_ChromiumWebBrowser.Focused) // googleDriveTreeView.Focused || 
             {
                 object file_or_folder = ((List<object>)googleDriveTreeView.SelectedNode.Tag)[1];
                 if (file_or_folder is Google.Apis.Drive.v3.Data.File)
@@ -1144,14 +1250,14 @@ namespace ContentManagerStudio
                     }
                     ((JObject)global_user_cat_json[f.Md5Checksum])[path] = _checked;
                     var x = JsonConvert.SerializeObject(global_user_cat_json);
-                    System.IO.File.Delete("user_categories.json.bak");
-                    System.IO.File.Copy("user_categories.json", "user_categories.json.bak");
-                    System.IO.File.WriteAllText("user_categories.json", x);
+                    System.IO.File.Delete("categories/user_categories.json.bak");
+                    System.IO.File.Copy("categories/user_categories.json", "categories/user_categories.json.bak");
+                    System.IO.File.WriteAllText("categories/user_categories.json", x);
                     //
                     handle_file_cat_changed(f, googleDriveTreeView.Nodes);
                 }
             }
-            else if (filterCategoriesWebBrowser.Focused)
+            else if (filter_ChromiumWebBrowser.Focused) // filterCategoriesWebBrowser.Focused
             {
                 if (_checked == 1)
                 {
@@ -1174,6 +1280,7 @@ namespace ContentManagerStudio
                 who_is_focused(this.Controls);
                 throw new Exception();
             }
+            }));
         }
 
         void handle_file_cat_changed(Google.Apis.Drive.v3.Data.File f, TreeNodeCollection nc)
@@ -1206,11 +1313,11 @@ namespace ContentManagerStudio
             }
         }
 
-        private void testButton_Click(object sender, EventArgs e)
-        {
-            object[] json = { "[ \"f0\", \"f1\", { \"dname\": \"d1\", \"content\": [\"f11\", \"f12\", { \"dname\": \"d2\", \"content\": [\"f21\", \"f22\"] }] }, \"f2\", \"f3\"]" };
-            categoriesWebBrowser.Document.InvokeScript("create_tree_menue", json);
-        }
+        //private void testButton_Click(object sender, EventArgs e)
+        //{
+        //    object[] json = { "[ \"f0\", \"f1\", { \"dname\": \"d1\", \"content\": [\"f11\", \"f12\", { \"dname\": \"d2\", \"content\": [\"f21\", \"f22\"] }] }, \"f2\", \"f3\"]" };
+        //    categoriesWebBrowser.Document.InvokeScript("create_tree_menue", json);
+        //}
 
         private void searchTextBox_KeyDown(object sender, KeyEventArgs e)
         {
@@ -1682,7 +1789,7 @@ namespace ContentManagerStudio
         {
             //locate_search_result();
             //return;
-
+            axWindowsMediaPlayer1.Ctlcontrols.stop();
             System.Threading.Thread read_google_drive_thread = new System.Threading.Thread(locate_search_result);
             read_google_drive_thread.IsBackground = true;
             read_google_drive_thread.Start();
@@ -1769,6 +1876,17 @@ namespace ContentManagerStudio
             show_processing_image();
         }
 
+        private void tabControl_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            var x = e;
+            TabControl tc = (TabControl)sender;
+            try
+            {
+                tc.Controls[tc.SelectedIndex].Controls[0].Controls[0].Focus(); // on the ChromiumBrowser
+            }
+            catch (Exception) { }
+        }
+
         // https://www.codeproject.com/Questions/144813/Tab-control-background-color-in-visual-Studio-2005
         private void tabControl_DrawItem(object sender, System.Windows.Forms.DrawItemEventArgs e)
         {
@@ -1791,7 +1909,8 @@ namespace ContentManagerStudio
                 foreBrush = new SolidBrush(e.ForeColor);
             }
 
-            string tabName = tc.TabPages[e.Index].Text;
+            TabPage tp = tc.TabPages[e.Index];
+            string tabName = tp.Text;
             StringFormat sf = new StringFormat();
             sf.Alignment = StringAlignment.Center;
             e.Graphics.FillRectangle(backBrush, e.Bounds);
@@ -1941,7 +2060,7 @@ namespace ContentManagerStudio
                             JArray categories_json = (JArray)jo["categories"];
                             global_user_cat_json = (JObject)jo["user_categories"];
 
-                            handle_cats(categories_json);
+                            handle_cats(categories_json, "cat");
 
                             break;
                         default:
@@ -1961,19 +2080,26 @@ namespace ContentManagerStudio
             }
         }
 
-        private void handle_cats(JArray categories_json)
+        private void handle_cats(JArray categories_json, string _type)
         {
-            check_user_cat(categories_json);
-
-            run_load_google_drive_info();
-
-            System.Threading.Thread load_cat_tree_thread = new System.Threading.Thread(new ThreadStart((new load_cat_tree_class(categoriesWebBrowser, this, false, true, false, false, false, "#fff7b0", categories_json)).load_cat_tree));
-            load_cat_tree_thread.IsBackground = true;
-            load_cat_tree_thread.Start();
-
-            System.Threading.Thread load_filter_cat_tree_thread = new System.Threading.Thread(new ThreadStart((new load_cat_tree_class(filterCategoriesWebBrowser, this, false, true, true, true, true, "#d7ffb0", categories_json)).load_cat_tree));
-            load_filter_cat_tree_thread.IsBackground = true;
-            load_filter_cat_tree_thread.Start();
+            if (_type == "filter")
+            {
+                System.Threading.Thread load_filter_cat_tree_thread = new System.Threading.Thread(new ThreadStart((new load_cat_tree_class(filter_ChromiumWebBrowser, this, false, true, true, true, true, "#d7ffb0", categories_json)).load_cat_tree));
+                load_filter_cat_tree_thread.IsBackground = true;
+                load_filter_cat_tree_thread.Start();
+            }
+            else if (_type == "cat")
+            {
+                System.Threading.Thread load_cat_tree_thread = new System.Threading.Thread(new ThreadStart((new load_cat_tree_class(categories_ChromiumWebBrowser, this, false, true, false, false, false, "#fff7b0", categories_json)).load_cat_tree));
+                load_cat_tree_thread.IsBackground = true;
+                load_cat_tree_thread.Start();
+                //
+                check_user_cat(categories_json);
+            }
+            else
+            {
+                throw new Exception("undetected _type: " + _type);
+            }
         }
 
         private void sendCatButton_Click(object sender, EventArgs e)
@@ -1990,7 +2116,7 @@ namespace ContentManagerStudio
         private void sendUserCatButton_Click(object sender, EventArgs e)
         {
             //string browser_id = (string)ws_ht[ws1];
-            JObject user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("user_categories.json")); // "{ op: 'client_did_something'}");
+            JObject user_cat_json = (JObject)JsonConvert.DeserializeObject(System.IO.File.ReadAllText("categories/user_categories.json")); // "{ op: 'client_did_something'}");
             JObject jo = new JObject();
             jo.Add("op", "client_sent_user_cats");
             jo.Add("username", (string)properties_ht["username"]);

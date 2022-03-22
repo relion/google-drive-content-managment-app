@@ -228,7 +228,8 @@ ul.catRootUl,
   /* background-color: #fff7b0; */
   border: 1px solid gray;
   border-radius: 5px;
-  padding: 1px 5px 3px 0px;
+  padding: 5px 4px 1px 0px;
+  margin: 0;
 }
 
 button {

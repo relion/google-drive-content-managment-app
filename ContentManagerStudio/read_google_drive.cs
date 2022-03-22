@@ -94,7 +94,8 @@ namespace ContentManagerStudio
 
         public static UserCredential get_credential()
         {
-            FileStream stream = new FileStream("credentials.json", FileMode.Open, FileAccess.Read);
+            // https://developers.google.com/api-client-library/dotnet/guide/aaa_oauth
+            FileStream stream = new FileStream("client_secret_62536932498-91hvdg9m9s0rk26qd3gt7r4b0j441c0c.apps.googleusercontent.com.json", FileMode.Open, FileAccess.Read);
             string credPath = "token.json";
             UserCredential c = GoogleWebAuthorizationBroker.AuthorizeAsync(
                 GoogleClientSecrets.Load(stream).Secrets,
@@ -317,10 +318,6 @@ namespace ContentManagerStudio
             tree_depth--;
             //
             return folder_info;
-        }
-
-        public void share_file(Google.Apis.Drive.v3.Data.File f)
-        {
         }
     }
 }

@@ -1,6 +1,12 @@
 ﻿/* Categories - Tree Menue */
 /* by Ofek.M & Aryeh.T 8/2019-6/2020 */
 
+document.addEventListener('keydown', function (e) {
+    if (!e.ctrlKey) return;
+    if (e.key === '+') window.callbackObj.chromium_cat_ctrl_plus_minus(0.25);
+    if (e.key === '-') window.callbackObj.chromium_cat_ctrl_plus_minus(-0.25);
+}); 
+
 var cat_json;
 var reset = true;
 var cat_json_cookie_name = "cat_json";
@@ -400,7 +406,8 @@ function create_tree_menue(
   }
   if (add_clear_buttton) {
     var reset_button = document.createElement("button");
-    reset_button.innerText = "reset";
+      reset_button.innerText = "reset";
+      reset_button.style.marginBottom = "6px";
     reset_button.onclick = function () {
       clear_all_tree_menue_triple_checkboxes();
       window.external.cat_tree_was_cleared();
@@ -482,13 +489,21 @@ function do_cat_helper(json, ul, path) {
     checkbox.style.cursor = "pointer";
     checkbox.i = 0;
     checkbox.src = "images/cb/" + cb_img_ar[0];
-    checkbox.onclick = function () {
-      this.i = (this.i + 1) % cb_img_ar.length;
-      this.src = "images/cb/" + cb_img_ar[this.i];
-      window.external.cat_has_checked(
-        getFilePathString(this.parentElement),
-        this.i
-      );
+      checkbox.onclick = function () {
+          this.i = (this.i + 1) % cb_img_ar.length;
+          this.src = "images/cb/" + cb_img_ar[this.i];
+          if (window.callbackObj != undefined) {
+              window.callbackObj.chromium_cat_has_checked(
+                  getFilePathString(this.parentElement),
+                  this.i
+              );
+          }
+          else {
+              window.external.cat_has_checked(
+                  getFilePathString(this.parentElement),
+                  this.i
+              );
+          }
     };
     node.appendChild(checkbox);
   }
@@ -497,12 +512,12 @@ function do_cat_helper(json, ul, path) {
     var checkbox = document.createElement("input");
     checkboxes_paths_ht[path] = checkbox;
     checkbox.setAttribute("type", "checkbox");
-    checkbox.onchange = function () {
-      window.external.cat_has_checked(
-        getFilePathString(this.parentElement),
-        this.checked
-      );
-    };
+      checkbox.onchange = function () {
+          window.callbackObj.chromium_cat_has_checked(
+              getFilePathString(this.parentElement),
+              this.checked ? 1 : 0
+          )
+      };
     node.appendChild(checkbox);
   }
 

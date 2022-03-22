@@ -18,6 +18,8 @@ using Newtonsoft.Json.Linq;
 using System.IO.Compression;
 using System.Text;
 using System.Globalization;
+using CefSharp;
+using CefSharp.WinForms;
 
 namespace ContentManagerStudio
 {
@@ -125,6 +127,10 @@ namespace ContentManagerStudio
         private static bool didnt_like(Google.Apis.Drive.v3.Data.File f)
         {
             bool didnt_like;
+            if (f.Md5Checksum == null)
+            {
+                return false; // lilo
+            }
             JObject jo = (JObject)global_user_cat_json[f.Md5Checksum];
             didnt_like = (jo != null && ((bool?)jo["דעתי/יחס/לא אהבתי 👎"] == true || (bool?)jo["דעתי/למחיקה 🗑️"] == true));
             return didnt_like;
@@ -140,6 +146,12 @@ namespace ContentManagerStudio
         //{
         //    handle_googleDriveTreeView_Node_selected(e.Node, null, true);
         //}
+
+        private static async System.Threading.Tasks.Task run_ChromiumWebBrowser_update_tree_menue_checkboxes(ChromiumWebBrowser wb, string f_name, object[] args)
+        {
+            JavascriptResponse res = await wb.EvaluateScriptAsync(f_name, args);
+            if (!res.Success) throw new Exception("failed to run javascript in browser.");
+        }
 
         public void handle_googleDriveTreeView_Node_selected(TreeNode tn, object file_or_folder = null, bool decode_heb = false)
         {
@@ -175,16 +187,16 @@ namespace ContentManagerStudio
                     json = new JObject();
                 }
                 object[] _args = { json.ToString() };
-                while (true)
-                {
-                    object ret = null;
-                    Invoke(new MethodInvoker(delegate
-                    {
-                        ret = categoriesWebBrowser.Document.InvokeScript("update_tree_menue_checkboxes", _args);
-                    }));
-                    if ((bool?)ret == true) break;
-                    System.Threading.Thread.Sleep(1000);
-                }
+
+                run_ChromiumWebBrowser_update_tree_menue_checkboxes(categories_ChromiumWebBrowser, "update_tree_menue_checkboxes", _args);
+                //while (true)
+                //{
+                //    //object ret = null;
+                //    run_ChromiumWebBrowser_update_tree_menue_checkboxes(categories_ChromiumWebBrowser, "update_tree_menue_checkboxes", _args);
+                //    //if ((bool?)ret == true) break;
+                //    //System.Threading.Thread.Sleep(1000);
+                //}
+
                 JObject jo = (JObject)global_user_cat_json[f.Md5Checksum];
                 if (jo == null)
                 {
@@ -334,6 +346,12 @@ namespace ContentManagerStudio
 
         private static bool get_dup_files(GoogleFolder root_folder, Google.Apis.Drive.v3.Data.File f, out string[] dup_files, out bool already_shared_by_other_copy)
         {
+            if (f.Md5Checksum == null)
+            {
+                dup_files = null;
+                already_shared_by_other_copy = false;
+                return false;
+            }
             List<object> fl = (List<object>)((Hashtable)global_ri.by_ht_name_ht["file_by_Md5_ht"])[f.Md5Checksum];
             already_shared_by_other_copy = false;
             // check if shared:

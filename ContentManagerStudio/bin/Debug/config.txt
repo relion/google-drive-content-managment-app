@@ -3,6 +3,8 @@ timeFormat: 0
 #start_dir: $Bak - Smartphone/WhatsApp-Media/WhatsApp Video
 #start_dir: $Bak - Smartphone/WhatsApp-Media
 #start_dir: Smartphone - mp3
-excluded_folders_re: $del_later|MM/facebook|$Bak|$upload_dir|*/_gsdata_*
+excluded_folders_re: $del_later|MM/facebook|*$Bak|$upload_dir|*/_gsdata_*|$Sync from my PC/Projects
 #$Bak - Smartphone/Recording/Auto Call Recorder
 #,$Bak
+cat_ZoomLevel: 1.5
+filter_ZoomLevel: 1.5

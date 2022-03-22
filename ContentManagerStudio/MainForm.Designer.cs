@@ -1,4 +1,8 @@
-﻿namespace ContentManagerStudio
+﻿using CefSharp;
+using CefSharp.WinForms;
+using System.Windows.Forms;
+
+namespace ContentManagerStudio
 {
     partial class MainForm
     {
@@ -45,9 +49,11 @@
             this.propertiesTabPage = new System.Windows.Forms.TabPage();
             this.nodeInfoTextBox = new System.Windows.Forms.TextBox();
             this.categorizeTabPage = new System.Windows.Forms.TabPage();
-            this.categoriesWebBrowser = new System.Windows.Forms.WebBrowser();
+            this.panel1 = new System.Windows.Forms.Panel();
+            this.categories_ChromiumWebBrowser = new CefSharp.WinForms.ChromiumWebBrowser();
             this.filterTabPage = new System.Windows.Forms.TabPage();
-            this.filterCategoriesWebBrowser = new System.Windows.Forms.WebBrowser();
+            this.panel2 = new System.Windows.Forms.Panel();
+            this.filter_ChromiumWebBrowser = new CefSharp.WinForms.ChromiumWebBrowser();
             this.showDupsButton = new System.Windows.Forms.Button();
             this.descriptionClearButton = new System.Windows.Forms.Button();
             this.descriptionLabel = new System.Windows.Forms.Label();
@@ -79,6 +85,7 @@
             this.sizeColumnHeader = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
             this.analysisTabPage = new System.Windows.Forms.TabPage();
             this.splitContainer7 = new System.Windows.Forms.SplitContainer();
+            this.label2 = new System.Windows.Forms.Label();
             this.sizeLabel = new System.Windows.Forms.Label();
             this.dupsFolderComboBox = new System.Windows.Forms.ComboBox();
             this.button1 = new System.Windows.Forms.Button();
@@ -93,7 +100,8 @@
             this.splitContainer2 = new System.Windows.Forms.SplitContainer();
             this.processing_purpose_TextBox = new System.Windows.Forms.TextBox();
             this.processingPictureBox = new System.Windows.Forms.PictureBox();
-            this.label2 = new System.Windows.Forms.Label();
+            this.chromiumWebBrowser1 = new CefSharp.WinForms.ChromiumWebBrowser();
+            this.chromiumWebBrowser2 = new CefSharp.WinForms.ChromiumWebBrowser();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
             this.splitContainer1.Panel2.SuspendLayout();
@@ -115,7 +123,9 @@
             this.treeViewTabControl.SuspendLayout();
             this.propertiesTabPage.SuspendLayout();
             this.categorizeTabPage.SuspendLayout();
+            this.panel1.SuspendLayout();
             this.filterTabPage.SuspendLayout();
+            this.panel2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).BeginInit();
             this.searchTabPage.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer6)).BeginInit();
@@ -337,6 +347,7 @@
             this.treeViewTabControl.Size = new System.Drawing.Size(406, 403);
             this.treeViewTabControl.TabIndex = 1;
             this.treeViewTabControl.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.tabControl_DrawItem);
+            this.treeViewTabControl.SelectedIndexChanged += new System.EventHandler(this.tabControl_SelectedIndexChanged);
             // 
             // propertiesTabPage
             // 
@@ -362,7 +373,7 @@
             // 
             // categorizeTabPage
             // 
-            this.categorizeTabPage.Controls.Add(this.categoriesWebBrowser);
+            this.categorizeTabPage.Controls.Add(this.panel1);
             this.categorizeTabPage.Location = new System.Drawing.Point(4, 22);
             this.categorizeTabPage.Name = "categorizeTabPage";
             this.categorizeTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -371,21 +382,28 @@
             this.categorizeTabPage.Text = " Categorize ";
             this.categorizeTabPage.UseVisualStyleBackColor = true;
             // 
-            // categoriesWebBrowser
+            // panel1
             // 
-            this.categoriesWebBrowser.AllowNavigation = false;
-            this.categoriesWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.categoriesWebBrowser.Location = new System.Drawing.Point(3, 3);
-            this.categoriesWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.categoriesWebBrowser.Name = "categoriesWebBrowser";
-            this.categoriesWebBrowser.ScriptErrorsSuppressed = true;
-            this.categoriesWebBrowser.Size = new System.Drawing.Size(392, 371);
-            this.categoriesWebBrowser.TabIndex = 0;
-            this.categoriesWebBrowser.WebBrowserShortcutsEnabled = false;
+            this.panel1.Controls.Add(this.categories_ChromiumWebBrowser);
+            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel1.Location = new System.Drawing.Point(3, 3);
+            this.panel1.Name = "panel1";
+            this.panel1.Size = new System.Drawing.Size(392, 371);
+            this.panel1.TabIndex = 0;
+            // 
+            // categories_ChromiumWebBrowser
+            // 
+            this.categories_ChromiumWebBrowser.ActivateBrowserOnCreation = false;
+// TODO: Code generation for '' failed because of Exception 'Invalid Primitive Type: System.IntPtr. Consider using CodeObjectCreateExpression.'.
+            this.categories_ChromiumWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.categories_ChromiumWebBrowser.Location = new System.Drawing.Point(0, 0);
+            this.categories_ChromiumWebBrowser.Name = "categories_ChromiumWebBrowser";
+            this.categories_ChromiumWebBrowser.Size = new System.Drawing.Size(392, 371);
+            this.categories_ChromiumWebBrowser.TabIndex = 0;
             // 
             // filterTabPage
             // 
-            this.filterTabPage.Controls.Add(this.filterCategoriesWebBrowser);
+            this.filterTabPage.Controls.Add(this.panel2);
             this.filterTabPage.Location = new System.Drawing.Point(4, 22);
             this.filterTabPage.Name = "filterTabPage";
             this.filterTabPage.Padding = new System.Windows.Forms.Padding(3);
@@ -394,17 +412,24 @@
             this.filterTabPage.Text = " Filter ";
             this.filterTabPage.UseVisualStyleBackColor = true;
             // 
-            // filterCategoriesWebBrowser
+            // panel2
             // 
-            this.filterCategoriesWebBrowser.AllowNavigation = false;
-            this.filterCategoriesWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.filterCategoriesWebBrowser.Location = new System.Drawing.Point(3, 3);
-            this.filterCategoriesWebBrowser.MinimumSize = new System.Drawing.Size(20, 20);
-            this.filterCategoriesWebBrowser.Name = "filterCategoriesWebBrowser";
-            this.filterCategoriesWebBrowser.ScriptErrorsSuppressed = true;
-            this.filterCategoriesWebBrowser.Size = new System.Drawing.Size(392, 371);
-            this.filterCategoriesWebBrowser.TabIndex = 1;
-            this.filterCategoriesWebBrowser.WebBrowserShortcutsEnabled = false;
+            this.panel2.Controls.Add(this.filter_ChromiumWebBrowser);
+            this.panel2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.panel2.Location = new System.Drawing.Point(3, 3);
+            this.panel2.Name = "panel2";
+            this.panel2.Size = new System.Drawing.Size(392, 371);
+            this.panel2.TabIndex = 0;
+            // 
+            // filter_ChromiumWebBrowser
+            // 
+            this.filter_ChromiumWebBrowser.ActivateBrowserOnCreation = false;
+// TODO: Code generation for '' failed because of Exception 'Invalid Primitive Type: System.IntPtr. Consider using CodeObjectCreateExpression.'.
+            this.filter_ChromiumWebBrowser.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.filter_ChromiumWebBrowser.Location = new System.Drawing.Point(0, 0);
+            this.filter_ChromiumWebBrowser.Name = "filter_ChromiumWebBrowser";
+            this.filter_ChromiumWebBrowser.Size = new System.Drawing.Size(392, 371);
+            this.filter_ChromiumWebBrowser.TabIndex = 0;
             // 
             // showDupsButton
             // 
@@ -786,6 +811,15 @@
             this.splitContainer7.SplitterDistance = 113;
             this.splitContainer7.TabIndex = 0;
             // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(5, 10);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(113, 13);
+            this.label2.TabIndex = 22;
+            this.label2.Text = "Find Duplicates under:";
+            // 
             // sizeLabel
             // 
             this.sizeLabel.AutoSize = true;
@@ -957,14 +991,25 @@
             this.processingPictureBox.TabStop = false;
             this.processingPictureBox.Visible = false;
             // 
-            // label2
+            // chromiumWebBrowser1
             // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(5, 10);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(113, 13);
-            this.label2.TabIndex = 22;
-            this.label2.Text = "Find Duplicates under:";
+            this.chromiumWebBrowser1.ActivateBrowserOnCreation = false;
+// TODO: Code generation for '' failed because of Exception 'Invalid Primitive Type: System.IntPtr. Consider using CodeObjectCreateExpression.'.
+            this.chromiumWebBrowser1.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chromiumWebBrowser1.Location = new System.Drawing.Point(0, 0);
+            this.chromiumWebBrowser1.Name = "chromiumWebBrowser1";
+            this.chromiumWebBrowser1.Size = new System.Drawing.Size(392, 371);
+            this.chromiumWebBrowser1.TabIndex = 0;
+            // 
+            // chromiumWebBrowser2
+            // 
+            this.chromiumWebBrowser2.ActivateBrowserOnCreation = false;
+// TODO: Code generation for '' failed because of Exception 'Invalid Primitive Type: System.IntPtr. Consider using CodeObjectCreateExpression.'.
+            this.chromiumWebBrowser2.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.chromiumWebBrowser2.Location = new System.Drawing.Point(0, 0);
+            this.chromiumWebBrowser2.Name = "chromiumWebBrowser2";
+            this.chromiumWebBrowser2.Size = new System.Drawing.Size(392, 371);
+            this.chromiumWebBrowser2.TabIndex = 0;
             // 
             // MainForm
             // 
@@ -1003,7 +1048,9 @@
             this.propertiesTabPage.ResumeLayout(false);
             this.propertiesTabPage.PerformLayout();
             this.categorizeTabPage.ResumeLayout(false);
+            this.panel1.ResumeLayout(false);
             this.filterTabPage.ResumeLayout(false);
+            this.panel2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.axWindowsMediaPlayer1)).EndInit();
             this.searchTabPage.ResumeLayout(false);
             this.splitContainer6.Panel1.ResumeLayout(false);
@@ -1046,6 +1093,7 @@
         private System.Windows.Forms.TreeView googleDriveTreeView;
         private System.Windows.Forms.TextBox nodeInfoTextBox;
         private AxWMPLib.AxWindowsMediaPlayer axWindowsMediaPlayer1;
+        //private ChromiumWebBrowser filterCategories_chromiumWebBrowser;
         private System.Windows.Forms.SplitContainer splitContainer4;
         private System.Windows.Forms.SplitContainer splitContainer5;
         private System.Windows.Forms.Button sahreAndPalyButton;
@@ -1063,7 +1111,7 @@
         private System.Windows.Forms.TabControl treeViewTabControl;
         private System.Windows.Forms.TabPage propertiesTabPage;
         private System.Windows.Forms.TabPage categorizeTabPage;
-        private System.Windows.Forms.WebBrowser categoriesWebBrowser;
+        //private System.Windows.Forms.WebBrowser categoriesWebBrowser;
         private System.Windows.Forms.Label sizeLabel;
         private System.Windows.Forms.TextBox minTextBox;
         private System.Windows.Forms.ComboBox dupsFolderComboBox;
@@ -1088,7 +1136,7 @@
         private System.Windows.Forms.ColumnHeader filenameColumnHeader;
         private System.Windows.Forms.ColumnHeader sizeColumnHeader;
         private System.Windows.Forms.CheckBox olnySharedCheckBox;
-        private System.Windows.Forms.WebBrowser filterCategoriesWebBrowser;
+        //private System.Windows.Forms.WebBrowser filterCategoriesWebBrowser;
         private System.Windows.Forms.CheckBox categoriesByAndOrCheckBox;
         private System.Windows.Forms.TextBox searchResultsTextBox;
         private System.Windows.Forms.Button showDupsButton;
@@ -1098,6 +1146,12 @@
         private System.Windows.Forms.Button sendUserCatButton;
         private System.Windows.Forms.CheckBox SearchGIdCheckBox;
         private System.Windows.Forms.Label label2;
+        private Panel panel1;
+        private ChromiumWebBrowser chromiumWebBrowser1;
+        private Panel panel2;
+        private ChromiumWebBrowser chromiumWebBrowser2;
+        private ChromiumWebBrowser categories_ChromiumWebBrowser;
+        private ChromiumWebBrowser filter_ChromiumWebBrowser;
     }
 }
 
